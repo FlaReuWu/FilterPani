@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+
+<style>
+body{
+font-family:Arial;
+background:#f4f7fb;
+padding:20px;
+}
+
+h1{
+color:#0066ff;
+}
+
+.card{
+background:white;
+padding:20px;
+margin:15px 0;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+button{
+background:#00b894;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:5px;
+cursor:pointer;
+margin:3px;
+}
+
+.assign button{
+background:#0066ff;
+}
+
+input{
+padding:8px;
+margin-right:10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>FilterPani Admin Dashboard 💧</h1>
+
+<h3>Add Delivery Boy</h3>
+<form action="/add_delivery" method="POST">
+<input type="text" name="name" placeholder="Enter name" required>
+<button type="submit">Add</button>
+</form>
+
+<hr>
+
+{% for order in orders %}
+
+<div class="card">
+
+<b>Order #{{ order.id }}</b><br><br>
+
+Name: {{ order.name }} <br>
+Phone: {{ order.phone }} <br>
+Address: {{ order.address }} <br>
+
+<br>
+
+<b>Cart:</b><br>
+{% for item in order.cart_items %}
+{{ item }} <br>
+{% endfor %}
+
+<br>
+
+<b>Total: ₹{{ order.total }}</b><br><br>
+
+Status: {{ order.status }} <br>
+Delivery Boy: {{ order.delivery_boy or "Not Assigned" }}
+
+<br><br>
+
+<div class="assign">
+Assign Delivery:<br>
+
+{% for boy in boys %}
+<a href="/assign/{{ order.id }}/{{ boy.name }}">
+<button>{{ boy.name }}</button>
+</a>
+{% endfor %}
+
+</div>
+
+<br>
+
+<a href="/delivered/{{ order.id }}">
+<button>Mark Delivered</button>
+</a>
+
+</div>
+
+{% endfor %}
+
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>FilterPani</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+body{
+margin:0;
+font-family:'Poppins', sans-serif;
+background:#f5f7fb;
+}
+
+/* Header */
+
+.header{
+background:#0066ff;
+color:white;
+padding:18px;
+text-align:center;
+font-size:20px;
+font-weight:600;
+}
+
+/* Products */
+
+.products{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+padding:15px;
+}
+
+.card{
+background:white;
+border-radius:12px;
+padding:10px;
+text-align:center;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.card img{
+width:100%;
+height:120px;
+object-fit:contain;
+}
+
+.price{
+color:#0066ff;
+font-weight:bold;
+margin:5px 0;
+}
+
+button{
+background:#0066ff;
+color:white;
+border:none;
+padding:8px;
+border-radius:6px;
+width:100%;
+}
+
+/* Bottom Cart */
+
+.cart-bar{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:white;
+padding:10px;
+box-shadow:0 -3px 10px rgba(0,0,0,0.1);
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.cart-btn{
+background:#00b894;
+padding:10px 20px;
+border-radius:8px;
+color:white;
+border:none;
+}
+
+/* Popup Cart */
+
+.cart-popup{
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:white;
+display:none;
+flex-direction:column;
+padding:20px;
+}
+
+.cart-items{
+flex:1;
+overflow:auto;
+}
+
+input{
+width:100%;
+padding:10px;
+margin:5px 0;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+</style>
+
+<script>
+
+let cart = {}
+let prices = {
+    "20L Jar":50,
+    "1L Pack (12)":120,
+    "500ml Pack (20)":140,
+    "250ml Pack (30)":150
+}
+
+function add(product){
+    if(cart[product]){
+        cart[product]++
+    } else {
+        cart[product] = 1
+    }
+    update()
+}
+
+function update(){
+    let total = 0
+    let count = 0
+
+    for(let item in cart){
+        total += prices[item] * cart[item]
+        count += cart[item]
+    }
+
+    document.getElementById("cartTotal").innerText = "₹" + total
+    document.getElementById("cartCount").innerText = count
+    document.getElementById("cartData").value = JSON.stringify(cart)
+
+    showItems()
+}
+
+function showItems(){
+    let div = document.getElementById("cartItems")
+    div.innerHTML = ""
+
+    for(let item in cart){
+        div.innerHTML += item + " × " + cart[item] + "<br>"
+    }
+}
+
+function openCart(){
+    document.getElementById("popup").style.display = "flex"
+}
+
+function closeCart(){
+    document.getElementById("popup").style.display = "none"
+}
+
+</script>
+
+</head>
+
+<body>
+
+<div class="header">
+FilterPani 💧
+</div>
+
+<div class="products">
+
+<div class="card">
+<img src="{{ url_for('static', filename='images/20l.png') }}">
+<h4>20L Jar</h4>
+<div class="price">₹50</div>
+<button onclick="add('20L Jar')">Add</button>
+</div>
+
+<div class="card">
+<img src="{{ url_for('static', filename='images/1l.png') }}">
+<h4>1L Pack (12)</h4>
+<div class="price">₹120</div>
+<button onclick="add('1L Pack (12)')">Add</button>
+</div>
+
+<div class="card">
+<img src="{{ url_for('static', filename='images/500ml.png') }}">
+<h4>500ml Pack (20)</h4>
+<div class="price">₹140</div>
+<button onclick="add('500ml Pack (20)')">Add</button>
+</div>
+
+<div class="card">
+<img src="{{ url_for('static', filename='images/250ml.png') }}">
+<h4>250ml Pack (30)</h4>
+<div class="price">₹150</div>
+<button onclick="add('250ml Pack (30)')">Add</button>
+</div>
+
+</div>
+
+<!-- Bottom Cart -->
+
+<div class="cart-bar">
+
+<div>
+Items: <span id="cartCount">0</span> | Total: <span id="cartTotal">₹0</span>
+</div>
+
+<button class="cart-btn" onclick="openCart()">View Cart</button>
+
+</div>
+
+<!-- Cart Popup -->
+
+<div class="cart-popup" id="popup">
+
+<h2>Your Cart</h2>
+
+<div class="cart-items" id="cartItems"></div>
+
+<form action="/order" method="POST">
+
+<input type="hidden" name="cart" id="cartData">
+
+<input type="text" name="name" placeholder="Name" required>
+<input type="text" name="phone" placeholder="Phone" required>
+<input type="text" name="address" placeholder="Address" required>
+
+<button class="cart-btn">Place Order</button>
+
+</form>
+
+<br>
+
+<button onclick="closeCart()">Close</button>
+
+</div>
+
+</body>
+</html>

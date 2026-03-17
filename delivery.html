@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Delivery Panel</title>
+
+<style>
+body{
+font-family:Arial;
+background:#f4f7fb;
+padding:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+margin:15px 0;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+button{
+background:#0066ff;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:5px;
+cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2>Delivery Panel - {{ name }}</h2>
+
+{% for order in orders %}
+
+<div class="card">
+
+<b>Order #{{ order.id }}</b><br><br>
+
+Name: {{ order.name }} <br>
+Phone: {{ order.phone }} <br>
+Address: {{ order.address }} <br>
+
+<br>
+
+Cart: {{ order.product }}
+
+<br><br>
+
+<a href="/delivered/{{ order.id }}">
+<button>Mark Delivered</button>
+</a>
+
+</div>
+
+{% endfor %}
+
+</body>
+</html>
